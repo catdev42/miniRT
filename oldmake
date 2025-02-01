@@ -4,26 +4,22 @@ LIBNAME = libft.a
 LIBDIR = ./libft
 LIBFT = ./libft/libft.a
 
-MLX		= MLX42/build/libmlx42.a
+MLX		= minilibx_opengl_20191021/ 
 # ./minilibx-linux/libmlx_Linux.a
-MLXDIR	= MLX42
+MLXDIR	= minilibx_opengl_20191021 
 # ./minilibx-linux
 
 #------------------------------------------------#
 #   INGREDIENTS                                  #
 #------------------------------------------------#
 
-HEADERS 	= ./include
-OBJDIR		= ./obj
-SRC     	= test.c
-OBJS     	= $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
+HEADERS 	:= ./include
+OBJDIR		:= ./obj
+SRC     	:= 
+OBJS     	:= $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 
-CC      	= cc
-CFLAGS  	= -Wall -Wextra -Werror -g -fPIC
-LDFLAGS		= libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
-
-CFLAGS += -I$(MLX42_PATH)/include
-LDFLAGS += -L$(MLX42_PATH)/build -lmlx42 -lglfw -lm
+CC      	:= cc
+CFLAGS  	:= -Wall -Wextra -Werror -g -fPIC
 
 #------------------------------------------------#
 #   RECIPES                                      #
@@ -40,22 +36,19 @@ $(MLX) : runlibmlx
 
 $(LIBFT): runlibft
 
-# git clone https://github.com/42Paris/minilibx-linux.git; 
+# git clone https://github.com/42Paris/minilibx-linux.git; \
 
 runlibmlx:
-	@if [ ! -d "MLX42" ]; then \
-	    git clone https://github.com/codam-coding-college/MLX42.git; \
-	fi
-	@cd MLX42 && \
-	cmake -B build && \
-	cmake --build build -j4
-	@echo "MLX42 build complete"
+# @if [ ! -d "$(MLXDIR)" ]; then \
+# 	git clone https://github.com/codam-coding-college/MLX42.git; \
+# fi
+	$(MAKE) -C $(MLXDIR)
 
 runlibft:
 	$(MAKE) -C $(LIBDIR)
 
 $(NAME): $(LIBFT) $(MLX) $(OBJS) 
-	$(CC) $(CFLAGS) $(LDLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -Lminilibx-linux -lmlx_Linux -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
