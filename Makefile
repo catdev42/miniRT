@@ -1,13 +1,11 @@
-NAME	:= fdf
+NAME		= miniRT
 
-LIBNAME = libft.a
-LIBDIR = ./libft
-LIBFT = ./libft/libft.a
+LIBNAME 	= libft.a
+LIBDIR 		= ./libft
+LIBFT 		= ./libft/libft.a
 
-MLX		= MLX42/build/libmlx42.a
-# ./minilibx-linux/libmlx_Linux.a
-MLXDIR	= MLX42
-# ./minilibx-linux
+MLXDIR		= MLX42
+MLX			= $(MLXDIR)/build/libmlx42.a
 
 #------------------------------------------------#
 #   INGREDIENTS                                  #
@@ -19,11 +17,11 @@ SRC     	= test.c
 OBJS     	= $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 
 CC      	= cc
-CFLAGS  	= -Wall -Wextra -Werror -g -fPIC
-LDFLAGS		= libmlx42.a -Iinclude -ldl -lglfw -pthread -lm
+CFLAGS  	= -Wall -Wextra -Werror -g
+LDFLAGS 	= -L$(MLXDIR)/build -lmlx42 -lglfw -ldl -pthread -lm
 
-CFLAGS += -I$(MLX42_PATH)/include
-LDFLAGS += -L$(MLX42_PATH)/build -lmlx42 -lglfw -lm
+CFLAGS 		+= -I$(HEADERS) -I$(MLXDIR)/include
+
 
 #------------------------------------------------#
 #   RECIPES                                      #
@@ -40,8 +38,6 @@ $(MLX) : runlibmlx
 
 $(LIBFT): runlibft
 
-# git clone https://github.com/42Paris/minilibx-linux.git; 
-
 runlibmlx:
 	@if [ ! -d "MLX42" ]; then \
 	    git clone https://github.com/codam-coding-college/MLX42.git; \
@@ -55,7 +51,7 @@ runlibft:
 	$(MAKE) -C $(LIBDIR)
 
 $(NAME): $(LIBFT) $(MLX) $(OBJS) 
-	$(CC) $(CFLAGS) $(LDLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(OBJS) -o $(NAME) $(LIBFT) $(LDFLAGS)
 
 clean:
 	rm -f $(OBJS)
